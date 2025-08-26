@@ -1,14 +1,11 @@
 <?php
-use CommonDBTM;
-use ITILFollowup;
-use Ticket;
 
 function replycounter_update_ticket_name(int $tickets_id): void {
    global $DB;
 
    $tickets_id = (int)$tickets_id;
 
-   // Conta quantas respostas (followups) existem para este ticket
+   // Conta quantas respostas existem para este ticket
    $sql = "SELECT COUNT(*) AS c
              FROM glpi_itilfollowups
             WHERE itemtype = 'Ticket'
@@ -20,11 +17,11 @@ function replycounter_update_ticket_name(int $tickets_id): void {
       $count = (int)$row['c'];
    }
 
-   // Atualiza o título do chamado, prefixando com [N]
+   // Atualiza o título do chamado
    $ticket = new Ticket();
    if ($ticket->getFromDB($tickets_id)) {
       $old = $ticket->fields['name'] ?? '';
-      // remove um prefixo antigo [N] se existir
+      // Remove prefixo antigo [N] se já existir
       $base = preg_replace('/^\\[\\d+\\]\\s*/', '', (string)$old);
       $new  = ($count > 0 ? '['.$count.'] ' : '') . $base;
 
@@ -37,8 +34,8 @@ function replycounter_update_ticket_name(int $tickets_id): void {
    }
 }
 
-// Chamado automaticamente QUANDO uma resposta é adicionada
-function replycounter_on_followup_add(CommonDBTM $item): void {
+// Executado quando uma resposta é adicionada
+function replycounter_on_followup_add($item): void {
    if (!($item instanceof ITILFollowup)) { return; }
    if (($item->fields['itemtype'] ?? '') !== 'Ticket') { return; }
 
@@ -48,8 +45,8 @@ function replycounter_on_followup_add(CommonDBTM $item): void {
    }
 }
 
-// Opcional: mantém contador correto se uma resposta for removida
-function replycounter_on_followup_purge(CommonDBTM $item): void {
+// Executado quando uma resposta é removida
+function replycounter_on_followup_purge($item): void {
    if (!($item instanceof ITILFollowup)) { return; }
    if (($item->fields['itemtype'] ?? '') !== 'Ticket') { return; }
 
@@ -59,6 +56,6 @@ function replycounter_on_followup_purge(CommonDBTM $item): void {
    }
 }
 
-// Instalação / remoção (não criamos tabelas)
+// Instalação / remoção
 function plugin_replycounter_install()   { return true; }
 function plugin_replycounter_uninstall() { return true; }
