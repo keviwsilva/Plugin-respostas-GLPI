@@ -17,20 +17,22 @@ function plugin_version_replycounter() {
       ],
    ];
 }
-
 function plugin_init_replycounter() {
-   global $PLUGIN_HOOKS;
+    global $PLUGIN_HOOKS;
 
-   // Dispara quando UMA resposta é adicionada ao chamado
-   $PLUGIN_HOOKS[Hooks::ITEM_ADD]['replycounter'] = [
-      'ITILFollowup' => 'replycounter_on_followup_add'
-   ];
+    // Indica que o plugin é compatível com CSRF
+    $PLUGIN_HOOKS['csrf_compliant']['replycounter'] = true;
 
-   // Opcional: mantém o contador correto se apagarem uma resposta
-   $PLUGIN_HOOKS[Hooks::ITEM_PURGE]['replycounter'] = [
-      'ITILFollowup' => 'replycounter_on_followup_purge'
-   ];
+    // Hooks para disparar quando uma resposta é adicionada ou removida
+    $PLUGIN_HOOKS[Hooks::ITEM_ADD]['replycounter'] = [
+        'ITILFollowup' => 'replycounter_on_followup_add'
+    ];
+
+    $PLUGIN_HOOKS[Hooks::ITEM_PURGE]['replycounter'] = [
+        'ITILFollowup' => 'replycounter_on_followup_purge'
+    ];
 }
+
 
 function plugin_replycounter_check_prerequisites() { return true; }
 function plugin_replycounter_check_config()        { return true; }
