@@ -7,7 +7,7 @@ class PluginTicketfollowupsTicket extends Ticket {
 
         // Conta os followups do ticket
         $query = "SELECT COUNT(*) as total 
-                  FROM glpi_ticketfollowups 
+                  FROM glpi_itilfollowups 
                   WHERE tickets_id = " . (int)$ticket->getID();
         $result = $DB->query($query);
 
@@ -24,3 +24,4 @@ class PluginTicketfollowupsTicket extends Ticket {
         return $name;
     }
 }
+
