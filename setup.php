@@ -6,8 +6,8 @@ function plugin_init_ticketfollowups() {
     $PLUGIN_HOOKS['csrf_compliant']['ticketfollowups'] = true;
 
     // Hook para alterar a exibição do Ticket
-    $PLUGIN_HOOKS['item_get']['ticketfollowups'] = [
-        'Ticket' => 'plugin_ticketfollowups_getTicketName'
+     $PLUGIN_HOOKS['item_get_title']['replycounter'] = [
+        'Ticket' => 'PluginTicketfollowupsTicket::showTicketWithFollowups'
     ];
 }
 
@@ -33,3 +33,4 @@ function plugin_ticketfollowups_check_prerequisites() {
 function plugin_ticketfollowups_check_config() {
     return true;
 }
+
