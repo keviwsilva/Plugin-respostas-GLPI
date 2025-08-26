@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+    <id>ticketfollowups</id>
+    <name>Ticket Followups Counter</name>
+    <version>1.0.0</version>
+    <author>Kevin Willians</author>
+    <license>GPLv2+</license>
+    <homepage>https://github.com/keviwsilva/replycounter</homepage>
+    <minGlpiVersion>10.0.0</minGlpiVersion>
+</plugin>
