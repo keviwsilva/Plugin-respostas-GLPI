@@ -130,29 +130,36 @@ async function getTodosTecnicosTicket(ticketId) {
 
     // 4️⃣ Verificar tickets atualizados
     async function verificarTickets() {
-        if (!MEU_USER_ID) {
-            console.warn("⚠ MEU_USER_ID não encontrado no cookie, pulando verificação...");
-            return;
-        }
-
-        const tickets = await buscarTickets();
-        tickets.forEach(ticket => {
-            if (!ticket.id || !ticket.date_mod) return;
-             const tecnicos = getTodosTecnicosTicket(ticket.id);
-            // Mostra só para tickets atribuídos ao usuário do cookie
-            if (ticket.users_id_assign !== MEU_USER_ID) return;
-
-            const key = `ticket_${ticket.id}_last_mod`;
-            const ultimoNotificado = ticketsNotificados[key] || localStorage.getItem(key) || 0;
-            const ultimaModificacao = new Date(ticket.date_mod).getTime();
-
-            if (ultimaModificacao > ultimoNotificado) {
-                mostrarNotificacao(ticket);
-                ticketsNotificados[key] = ultimaModificacao;
-                localStorage.setItem(key, ultimaModificacao);
-            }
-        });
+    if (!MEU_USER_ID) {
+        console.warn("⚠ MEU_USER_ID não encontrado no cookie, pulando verificação...");
+        return;
     }
+
+    const tickets = await buscarTickets();
+    
+    for (const ticket of tickets) {
+        if (!ticket.id || !ticket.date_mod) continue;
+
+        // Buscar todos os técnicos do ticket
+        const tecnicos = await getTodosTecnicosTicket(ticket.id);
+        
+        // Verificar se o usuário atual está na lista de técnicos
+        const usuarioEhTecnico = tecnicos.some(tecnico => tecnico.users_id === MEU_USER_ID);
+        
+        // Se o usuário não for técnico deste ticket, pular
+        if (!usuarioEhTecnico) continue;
+
+        const key = `ticket_${ticket.id}_last_mod`;
+        const ultimoNotificado = ticketsNotificados[key] || localStorage.getItem(key) || 0;
+        const ultimaModificacao = new Date(ticket.date_mod).getTime();
+
+        if (ultimaModificacao > ultimoNotificado) {
+            mostrarNotificacao(ticket);
+            ticketsNotificados[key] = ultimaModificacao;
+            localStorage.setItem(key, ultimaModificacao);
+        }
+    }
+}
 
     // 5️⃣ Fluxo principal
     iniciarSessao().then(async() => {
@@ -163,6 +170,7 @@ async function getTodosTecnicosTicket(ticketId) {
     });
 
 })();
+
 
 
 
