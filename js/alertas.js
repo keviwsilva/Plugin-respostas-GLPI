@@ -45,10 +45,11 @@
 
     // Fluxo principal
     (async function() {
-        await iniciarSessao();        // abre sessão primeiro
+        iniciarSessao();        // abre sessão primeiro
                 // primeira checagem
         // checagens seguintes a cada 60s
     })();
 
 })();
+
 
