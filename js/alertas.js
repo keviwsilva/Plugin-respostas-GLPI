@@ -30,7 +30,35 @@
     }
 
     // Função para buscar chamados
-    
+    async function buscarChamados() {
+        if (!sessionToken) {
+            console.warn("Session token não definido ainda, aguardando...");
+            return;
+        }
+        try {
+            const res = await fetch('/apirest.php/Ticket?range=0-10', {
+                headers: {
+                    'App-Token': APP_TOKEN,
+                    'Session-Token': sessionToken
+                }
+            });
+            const data = await res.json();
+            if (data && data.length > 0) {
+                data.forEach(ticket => {
+                    const ultimaAtualizacao = new Date(ticket.date_mod).getTime();
+                    const ultimoCheck = localStorage.getItem('last_check') || 0;
+                    if (ultimaAtualizacao > ultimoCheck && !chamadosNotificados.includes(ticket.id)) {
+                        mostrarNotificacao(ticket);
+                        chamadosNotificados.push(ticket.id);
+                    }
+                });
+                localStorage.setItem('last_check', Date.now());
+            }
+        } catch (err) {
+            console.error("Erro ao buscar tickets:", err);
+        }
+    }
+
     // Função para mostrar notificações
     function mostrarNotificacao(ticket) {
         const container = document.createElement('div');
@@ -46,10 +74,8 @@
     // Fluxo principal
     (async function() {
         iniciarSessao();        // abre sessão primeiro
-                // primeira checagem
-        // checagens seguintes a cada 60s
+        buscarChamados();             // primeira checagem
+        setInterval(buscarChamados, 60000); // checagens seguintes a cada 60s
     })();
 
 })();
-
-
