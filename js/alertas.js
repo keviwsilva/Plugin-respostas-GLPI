@@ -6,33 +6,32 @@
     let ticketsNotificados = {};
 
     // Função para pegar o ID do usuário direto do cookie
-  function pegarUserIdDoCookie() {
-    const cookieName = 'glpi_70a0f13dd8971b6c5952053cb97fe86b_rememberme';
+function pegarUserIdDoCookie() {
+    // Verifica todos os cookies que começam com 'glpi_'
     const cookies = document.cookie.split(';');
     
     for (let c of cookies) {
         c = c.trim();
-        if (c.startsWith(cookieName)) {
-            const valor = c.substring(cookieName.length + 1); // Pega o valor após o "="
+        if (c.includes('glpi_') && c.includes('_rememberme')) {
+            const parts = c.split('=');
+            const cookieValue = parts[1];
+            
             try {
-                // Remove possíveis espaços e decodifica URL
-                const valorDecodificado = decodeURIComponent(valor.trim());
+                const valorDecodificado = decodeURIComponent(cookieValue);
+                console.log('Cookie GLPI encontrado:', c);
                 console.log('Valor decodificado:', valorDecodificado);
                 
-                // Converte a string JSON em array
                 const arr = JSON.parse(valorDecodificado);
-                console.log('Array parseado:', arr);
-                
-                // Retorna o primeiro elemento (user_id) como número
                 return parseInt(arr[0], 10);
             } catch (err) {
                 console.error("Erro ao processar cookie:", err);
-                console.log("Valor raw:", valor);
                 return null;
             }
         }
     }
-    console.log('Cookie não encontrado');
+    
+    console.log('Nenhum cookie GLPI rememberme encontrado');
+    console.log('Todos os cookies:', document.cookie);
     return null;
 }
 
@@ -140,6 +139,7 @@
     });
 
 })();
+
 
 
 
