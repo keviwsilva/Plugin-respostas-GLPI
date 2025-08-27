@@ -1,6 +1,6 @@
 (function() {
-    const APP_TOKEN = 'SEU_APP_TOKEN';
-    const USER_TOKEN = 'SEU_USER_TOKEN';
+    const APP_TOKEN = 'qk3Tc6AgEDtcEpi4HbVwkuNWkrF04oLg5KfqLoOd';
+    const USER_TOKEN = 'XckImCc3N7gcd8a5MkhZj7tHkOu8HUAyQBRkVaXH';
     let chamadosNotificados = [];
 
     async function buscarChamados() {
@@ -50,3 +50,4 @@
     // Primeira checagem ao carregar
     buscarChamados();
 })();
+
