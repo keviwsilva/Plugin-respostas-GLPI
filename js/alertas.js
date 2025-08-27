@@ -103,34 +103,67 @@ async function getTodosTecnicosTicket(ticketId) {
         }
     }
 
-    // 3️⃣ Mostrar notificação
-    function mostrarNotificacao(ticket) {
-        console.log("🔔 Notificação:", ticket.id, ticket.name);
+ // Contêiner geral para empilhar notificações
+let notificacoesContainer = document.getElementById('notificacoes-container');
+if (!notificacoesContainer) {
+    notificacoesContainer = document.createElement('div');
+    notificacoesContainer.id = 'notificacoes-container';
+    notificacoesContainer.style.position = 'fixed';
+    notificacoesContainer.style.bottom = '20px';
+    notificacoesContainer.style.right = '20px';
+    notificacoesContainer.style.display = 'flex';
+    notificacoesContainer.style.flexDirection = 'column-reverse'; // nova em cima
+    notificacoesContainer.style.gap = '10px';
+    notificacoesContainer.style.zIndex = '99999';
+    document.body.appendChild(notificacoesContainer);
+}
 
-        const container = document.createElement('div');
-        container.innerHTML = `
-            <strong>Ticket #${ticket.id}</strong><br>
-            Atualizado em: ${ticket.date_mod}<br>
-            ${ticket.name || "Sem título"}<br>
-            <a href="http://192.168.2.150/front/ticket.form.php?id=${ticket.id}" 
+function mostrarNotificacao(ticket) {
+    console.log("🔔 Notificação:", ticket.id, ticket.name);
+
+    const container = document.createElement('div');
+    container.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <strong>Ticket #${ticket.id}</strong><br>
+                Atualizado em: ${ticket.date_mod}<br>
+                ${ticket.name || "Sem título"}<br>
+                <a href="http://192.168.2.150/front/ticket.form.php?id=${ticket.id}" 
                    target="_blank" title="Abrir ticket">
-                    🔗 Abrir Ticket
+                   🔗 Abrir Ticket
                 </a>
-        `;
-        container.style.position = 'fixed';
-        container.style.bottom = '20px';
-        container.style.right = '20px';
-        container.style.backgroundColor = 'red';
-        container.style.color = 'white';
-        container.style.padding = '10px';
-        container.style.zIndex = '99999';
-        container.style.fontSize = '14px';
-        container.style.borderRadius = '6px';
-        container.style.boxShadow = '0 4px 8px rgba(0,0,0,0.3)';
+            </div>
+            <button style="
+                margin-left: 10px;
+                background: transparent;
+                border: none;
+                color: white;
+                font-weight: bold;
+                cursor: pointer;
+                font-size: 16px;
+            " title="Fechar">✖</button>
+        </div>
+    `;
+    container.style.backgroundColor = 'red';
+    container.style.color = 'white';
+    container.style.padding = '10px';
+    container.style.borderRadius = '6px';
+    container.style.boxShadow = '0 4px 8px rgba(0,0,0,0.3)';
+    container.style.minWidth = '250px';
+    container.style.maxWidth = '300px';
+    container.style.wordBreak = 'break-word';
+    container.style.display = 'flex';
+    container.style.justifyContent = 'space-between';
 
-        document.body.appendChild(container);
-        setTimeout(() => container.remove(), 8000);
-    }
+    // Botão fechar
+    const btnFechar = container.querySelector('button');
+    btnFechar.addEventListener('click', () => {
+        container.remove();
+    });
+
+    notificacoesContainer.appendChild(container);
+}
+
 
     // 4️⃣ Verificar tickets atualizados
     async function verificarTickets() {
@@ -174,6 +207,7 @@ async function getTodosTecnicosTicket(ticketId) {
     });
 
 })();
+
 
 
 
