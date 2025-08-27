@@ -17,7 +17,7 @@ async function pegarUserIdDoBackend() {
         }
         
         const data = await response.json();
-        return data.user_id;
+        return data;
         
     } catch (error) {
         console.error('Erro ao buscar user_id:', error);
@@ -130,6 +130,7 @@ pegarUserIdDoBackend().then(userId => {
     });
 
 })();
+
 
 
 
