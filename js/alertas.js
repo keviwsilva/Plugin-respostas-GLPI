@@ -111,7 +111,11 @@ async function getTodosTecnicosTicket(ticketId) {
         container.innerHTML = `
             <strong>Ticket #${ticket.id}</strong><br>
             Atualizado em: ${ticket.date_mod}<br>
-            ${ticket.name || "Sem título"}
+            ${ticket.name || "Sem título"}<br>
+            <a href="http://192.168.2.150/front/ticket.form.php?id=${ticket.id}" 
+                   target="_blank" title="Abrir ticket">
+                    🔗 Abrir Ticket
+                </a>
         `;
         container.style.position = 'fixed';
         container.style.bottom = '20px';
@@ -170,6 +174,7 @@ async function getTodosTecnicosTicket(ticketId) {
     });
 
 })();
+
 
 
 
