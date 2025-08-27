@@ -36,7 +36,7 @@ async function getTodosTecnicosTicket(ticketId) {
     try {
         const response = await fetch(`/apirest.php/Ticket/${ticketId}/Ticket_User/`, {
             headers: {
-                'Session-Token': sessioToken,
+                'Session-Token': sessionToken,
                 'App-Token': APP_TOKEN,
             }
         });
@@ -164,6 +164,7 @@ getTodosTecnicosTicket(8236).then(tecnicos => {
     });
 
 })();
+
 
 
 
