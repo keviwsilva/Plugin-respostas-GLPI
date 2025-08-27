@@ -67,6 +67,7 @@
 
     // 4️⃣ Mostrar notificação visual
     function mostrarNotificacao(ticket, followup) {
+        console.log('teste notificacao')
         const container = document.createElement('div');
         container.className = 'custom-alert';
         container.innerHTML = `
@@ -79,8 +80,10 @@
 
     // 5️⃣ Verificar novos followups e notificar
     async function verificarNovosFollowups() {
+console.log('teste followup')
         const tickets = await buscarTickets();
         for (const ticket of tickets) {
+console.log('teste followup 1')
             if (!ticket.id) continue; // evita undefined
             const followups = await buscarFollowups(ticket.id);
             if (followups && followups.length > 0) {
@@ -88,7 +91,7 @@
                 const key = `ticket_${ticket.id}_last_followup`;
                 const lastNotified = chamadosNotificados[key] || localStorage.getItem(key) || 0;
                 const ultimoTime = new Date(ultimoFollowup.date).getTime();
-
+                 console.log('teste followup 2')
                 if (ultimoTime > lastNotified) {
                     mostrarNotificacao(ticket, ultimoFollowup);
                     chamadosNotificados[key] = ultimoTime;
@@ -106,6 +109,7 @@
 });
 
 })();
+
 
 
 
