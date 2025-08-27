@@ -25,6 +25,7 @@ async function pegarUserIdDoBackend() {
     }
 }
 
+const MEU_USER_ID = pegarUserIdDoBackend();
 // Usar:
 pegarUserIdDoBackend().then(userId => {
     console.log('User ID:', userId);
@@ -130,6 +131,7 @@ pegarUserIdDoBackend().then(userId => {
     });
 
 })();
+
 
 
 
