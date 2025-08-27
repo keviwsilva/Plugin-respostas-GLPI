@@ -2,8 +2,18 @@
     const APP_TOKEN = 'qk3Tc6AgEDtcEpi4HbVwkuNWkrF04oLg5KfqLoOd';
     const USER_TOKEN = 'XckImCc3N7gcd8a5MkhZj7tHkOu8HUAyQBRkVaXH';
     let sessionToken = null;
-    let MEU_USER_ID = null; // agora será preenchido pelo GLPI
+    let MEU_USER_ID = null; // ID do usuário logado
     let ticketsNotificados = {};
+
+    // 0️⃣ Pegar ID do usuário pelo cookie
+    function pegarUserIdDoCookie() {
+        const match = document.cookie.match(/glpi_\w+=\[(\d+),/);
+        if (match) return parseInt(match[1]);
+        return null;
+    }
+
+    MEU_USER_ID = pegarUserIdDoCookie();
+    if (!MEU_USER_ID) console.warn("⚠ Não foi possível pegar o ID do usuário pelo cookie");
 
     // 1️⃣ Iniciar sessão
     async function iniciarSessao() {
@@ -22,9 +32,6 @@
             if (data.session_token) {
                 sessionToken = data.session_token;
                 console.log("Sessão iniciada:", sessionToken);
-
-                // 2️⃣ Descobre o ID do usuário logado
-                await buscarMeuUserId();
             } else {
                 console.error("Falha ao iniciar sessão:", data);
             }
@@ -33,28 +40,7 @@
         }
     }
 
-    // 2️⃣ Pegar ID do usuário autenticado
-    async function buscarMeuUserId() {
-        try {
-            const res = await fetch('/apirest.php/getMyUser', { // endpoint correto para usuário logado
-                headers: {
-                    'App-Token': APP_TOKEN,
-                    'Session-Token': sessionToken
-                }
-            });
-            const data = await res.json();
-            if (data && data.id) {
-                MEU_USER_ID = data.id;
-                console.log("✅ Meu user_id é:", MEU_USER_ID);
-            } else {
-                console.warn("⚠ Não foi possível identificar o usuário logado:", data);
-            }
-        } catch (err) {
-            console.error("Erro ao buscar user_id:", err);
-        }
-    }
-
-    // 3️⃣ Buscar tickets
+    // 2️⃣ Buscar tickets
     async function buscarTickets() {
         if (!sessionToken) return [];
         try {
@@ -72,7 +58,7 @@
         }
     }
 
-    // 4️⃣ Mostrar notificação
+    // 3️⃣ Mostrar notificação
     function mostrarNotificacao(ticket) {
         console.log("🔔 Notificação:", ticket.id, ticket.name);
 
@@ -97,7 +83,7 @@
         setTimeout(() => container.remove(), 8000);
     }
 
-    // 5️⃣ Verificar tickets atualizados
+    // 4️⃣ Verificar tickets atualizados
     async function verificarTickets() {
         if (!MEU_USER_ID) {
             console.warn("⚠ Ainda não sabemos o MEU_USER_ID, pulando verificação...");
@@ -108,8 +94,8 @@
         tickets.forEach(ticket => {
             if (!ticket.id || !ticket.date_mod) return;
 
-            // ⚠ Ajuste aqui o campo certo (recipient ou lastupdater ou assign)
-            if (ticket.users_id_recipient != MEU_USER_ID) return;
+            // Filtra tickets atribuídos ao usuário logado
+            if (ticket.users_id_assign !== MEU_USER_ID) return;
 
             const key = `ticket_${ticket.id}_last_mod`;
             const ultimoNotificado = ticketsNotificados[key] || localStorage.getItem(key) || 0;
@@ -123,11 +109,10 @@
         });
     }
 
-    // 6️⃣ Fluxo principal
+    // 5️⃣ Fluxo principal
     iniciarSessao().then(() => {
-        setInterval(verificarTickets, 60000);
-        verificarTickets(); // roda a primeira vez sem esperar
+        verificarTickets(); // primeira execução
+        setInterval(verificarTickets, 60000); // roda a cada minuto
     });
 
 })();
-
