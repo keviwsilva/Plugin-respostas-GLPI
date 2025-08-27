@@ -2,18 +2,26 @@
     const APP_TOKEN = 'qk3Tc6AgEDtcEpi4HbVwkuNWkrF04oLg5KfqLoOd';
     const USER_TOKEN = 'XckImCc3N7gcd8a5MkhZj7tHkOu8HUAyQBRkVaXH';
     let sessionToken = null;
-    let MEU_USER_ID = null; // ID do usuário logado
+    let MEU_USER_ID = null; // será preenchido pelo valor do cookie
     let ticketsNotificados = {};
 
-    // 0️⃣ Pegar ID do usuário pelo cookie
+    // Função para pegar o ID do usuário direto do cookie
     function pegarUserIdDoCookie() {
-        const match = document.cookie.match(/glpi_\w+=\[(\d+),/);
-        if (match) return parseInt(match[1]);
+        const cookieName = 'glpi_70a0f13dd8971b6c5952053cb97fe86b_rememberme=';
+        const cookies = document.cookie.split(';');
+        for (let c of cookies) {
+            c = c.trim();
+            if (c.startsWith(cookieName)) {
+                const valor = c.substring(cookieName.length);
+                // supondo que o valor do cookie seja o ID puro ou JSON parseável
+                return parseInt(valor, 10);
+            }
+        }
         return null;
     }
 
     MEU_USER_ID = pegarUserIdDoCookie();
-    if (!MEU_USER_ID) console.warn("⚠ Não foi possível pegar o ID do usuário pelo cookie");
+    console.log("✅ MEU_USER_ID do cookie:", MEU_USER_ID);
 
     // 1️⃣ Iniciar sessão
     async function iniciarSessao() {
@@ -86,7 +94,7 @@
     // 4️⃣ Verificar tickets atualizados
     async function verificarTickets() {
         if (!MEU_USER_ID) {
-            console.warn("⚠ Ainda não sabemos o MEU_USER_ID, pulando verificação...");
+            console.warn("⚠ MEU_USER_ID não encontrado no cookie, pulando verificação...");
             return;
         }
 
@@ -94,7 +102,7 @@
         tickets.forEach(ticket => {
             if (!ticket.id || !ticket.date_mod) return;
 
-            // Filtra tickets atribuídos ao usuário logado
+            // Mostra só para tickets atribuídos ao usuário do cookie
             if (ticket.users_id_assign !== MEU_USER_ID) return;
 
             const key = `ticket_${ticket.id}_last_mod`;
