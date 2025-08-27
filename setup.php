@@ -13,7 +13,7 @@ function plugin_version_customjs() {
     return [
         'name'           => "Custom JS",
         'version'        => '1.0.0',
-        'author'         => 'Seu Nome',
+        'author'         => 'Kevin Willians',
         'license'        => 'GPLv2+',
         'homepage'       => 'https://glpi-project.org',
         'minGlpiVersion' => '10.0.0'
@@ -51,3 +51,4 @@ function plugin_customjs_install() {
 function plugin_customjs_uninstall() {
     return true;
 }
+
