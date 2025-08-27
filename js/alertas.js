@@ -32,7 +32,7 @@
   async function buscarTickets() {
         if (!sessionToken) return [];
         try {
-            const res = await fetch('/apirest.php/Ticket?range=0-10', {
+            const res = await fetch('/apirest.php/Ticket?range=0-10&order=DESC', {
                 headers: {
                     'App-Token': APP_TOKEN,
                     'Session-Token': sessionToken
@@ -106,6 +106,7 @@
 });
 
 })();
+
 
 
 
