@@ -91,7 +91,7 @@ async function getTodosTecnicosTicket(ticketId) {
     async function buscarTickets() {
         if (!sessionToken) return [];
         try {
-            const res = await fetch('/apirest.php/Ticket?range=0-20&sort=-19&order=DESC', {
+            const res = await fetch('/apirest.php/Ticket?range=0-40&order=DESC', {
                 headers: {
                     'App-Token': APP_TOKEN,
                     'Session-Token': sessionToken
@@ -167,6 +167,7 @@ async function getTodosTecnicosTicket(ticketId) {
     });
 
 })();
+
 
 
 
