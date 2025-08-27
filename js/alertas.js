@@ -106,6 +106,7 @@ pegarUserIdDoBackend().then(userId => {
         }
 
         const tickets = await buscarTickets();
+        console.log(tickets)
         tickets.forEach(ticket => {
             if (!ticket.id || !ticket.date_mod) return;
 
@@ -131,6 +132,7 @@ pegarUserIdDoBackend().then(userId => {
     });
 
 })();
+
 
 
 
