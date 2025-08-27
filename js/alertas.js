@@ -6,15 +6,22 @@
     let ticketsNotificados = {};
 
     // Função para pegar o ID do usuário direto do cookie
-    function pegarUserIdDoCookie() {
+  
+  function pegarUserIdDoCookie() {
         const cookieName = 'glpi_70a0f13dd8971b6c5952053cb97fe86b_rememberme=';
         const cookies = document.cookie.split(';');
         for (let c of cookies) {
             c = c.trim();
             if (c.startsWith(cookieName)) {
                 const valor = c.substring(cookieName.length);
-                // supondo que o valor do cookie seja o ID puro ou JSON parseável
-                return parseInt(valor, 10);
+                try {
+                    // Decodifica URL e transforma em array
+                    const arr = JSON.parse(decodeURIComponent(valor));
+                    return parseInt(arr[0], 10); // pega o primeiro elemento como user_id
+                } catch (err) {
+                    console.error("Erro ao decodificar cookie:", err);
+                    return null;
+                }
             }
         }
         return null;
@@ -124,3 +131,4 @@
     });
 
 })();
+
