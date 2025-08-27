@@ -1,16 +1,11 @@
 <?php
 // plugins/customjs/get_user_id.php
 define('GLPI_ROOT', '../../../../');
-include(GLPI_ROOT . 'inc/includes.php');
 
 // Verificar se a chave existe antes de usar
 $origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';
 $allowed_origin = ($origin && in_array(parse_url($origin, PHP_URL_HOST), ['localhost', '192.168.2.150'])) ? $origin : '*';
 
-// Headers devem ser enviados ANTES de qualquer output
-header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: ' . $allowed_origin);
-header('Access-Control-Allow-Credentials: true');
 
 $userId = null;
 
