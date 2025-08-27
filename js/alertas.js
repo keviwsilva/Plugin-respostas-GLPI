@@ -48,29 +48,9 @@
         }
     }
 
-    // 3️⃣ Buscar followups de um ticket (sem sort)
-    async function buscarFollowups(ticketId) {
-        if (!sessionToken || !ticketId) return [];
-        try {
-            const url = `/apirest.php/TicketFollowup?range=0-50&criteria[0][field]=tickets_id&criteria[0][searchtype]=equals&criteria[0][value]=${ticketId}`;
-            const res = await fetch(url, {
-                headers: {
-                    'App-Token': APP_TOKEN,
-                    'Session-Token': sessionToken
-                }
-            });
-            const data = await res.json();
-            return data || [];
-        } catch (err) {
-            console.error("Erro ao buscar followups do ticket", ticketId, err);
-            return [];
-        }
-    }
-
-    // 4️⃣ Mostrar notificação visual
-    function mostrarNotificacao(ticket, followup) {
-        console.log('teste notificacao')
-       const container = document.createElement('div');
+  // Mostrar notificação
+    function mostrarNotificacao(ticket) {
+        const container = document.createElement('div');
         container.className = 'custom-alert';
         container.innerHTML = `
             <strong>Ticket #${ticket.id}</strong><br>
@@ -79,12 +59,11 @@
         `;
         document.body.appendChild(container);
         setTimeout(() => container.remove(), 8000);
-
     }
 
-    // 5️⃣ Verificar novos followups e notificar
-    async function verificarNovosFollowups() {
-const tickets = await buscarTickets();
+    // Verificar tickets atualizados
+    async function verificarTickets() {
+        const tickets = await buscarTickets();
         tickets.forEach(ticket => {
             if (!ticket.id || !ticket.date_mod) return;
 
@@ -102,13 +81,15 @@ const tickets = await buscarTickets();
     }
 
 
+
     // Fluxo principal
    iniciarSessao().then(() => {
-    verificarNovosFollowups();              // só roda depois que sessionToken existir
-    setInterval(verificarNovosFollowups, 60000);
+    verificarTickets();              // só roda depois que sessionToken existir
+    setInterval(verificarTickets, 60000);
 });
 
 })();
+
 
 
 
