@@ -5,9 +5,9 @@
     let sessionToken = null;
     let chamadosNotificados = [];
 
-    // Função para iniciar sessão
+    // 1️⃣ Iniciar sessão
     async function iniciarSessao() {
-        console.log("Chamando iniciarSessao...");
+        console.log("Iniciando sessão...");
         try {
             const res = await fetch('/apirest.php/initSession', {
                 method: 'POST',
@@ -29,68 +29,83 @@
         }
     }
 
-    // Função para buscar chamados
-    async function buscarChamados() {
-        console.log('chamados', sessionToken)
-        
-        if (!sessionToken) {
-            console.warn("Session token não definido ainda, aguardando...");
-            return;
-        }
+    // 2️⃣ Buscar tickets
+    async function buscarTickets() {
+        if (!sessionToken) return;
         try {
-            const res = await fetch('/apirest.php/Ticket?range=0-10', {
+            const res = await fetch('/apirest.php/Ticket?range=0-10&sort=2&order=DESC', {
                 headers: {
                     'App-Token': APP_TOKEN,
                     'Session-Token': sessionToken
                 }
             });
+            const tickets = await res.json();
+            return tickets;
+        } catch (err) {
+            console.error("Erro ao buscar tickets:", err);
+            return [];
+        }
+    }
 
-           const tickets = await res.json();
+    // 3️⃣ Buscar followups de um ticket
+    async function buscarFollowups(ticketId) {
+        try {
+            const url = `/apirest.php/TicketFollowup?range=0-50&sort=2&order=DESC&criteria[0][field]=tickets_id&criteria[0][searchtype]=equals&criteria[0][value]=${ticketId}`;
+            const res = await fetch(url, {
+                headers: {
+                    'App-Token': APP_TOKEN,
+                    'Session-Token': sessionToken
+                }
+            });
+            const data = await res.json();
+            return data;
+        } catch (err) {
+            console.error("Erro ao buscar followups do ticket", ticketId, err);
+            return [];
+        }
+    }
 
+    // 4️⃣ Mostrar notificação visual
+    function mostrarNotificacao(ticket, followup) {
+        const container = document.createElement('div');
+        container.className = 'custom-alert';
+        container.innerHTML = `
+            <strong>Ticket #${ticket.id}</strong><br>
+            Nova resposta: ${followup.content || "Sem texto"}
+        `;
+        document.body.appendChild(container);
+        setTimeout(() => container.remove(), 8000);
+    }
+
+    // 5️⃣ Verificar novos followups e notificar
+    async function verificarNovosFollowups() {
+        const tickets = await buscarTickets();
         for (const ticket of tickets) {
-            // busca followups do ticket
-            const res2 = await fetch(`/apirest.php/Ticket/${ticket.id}/TicketFollowups`, {
-                headers: {
-                    'App-Token': APP_TOKEN,
-                    'Session-Token': sessionToken
-                }
-            });
-            const followups = await res2.json();
-
+            const followups = await buscarFollowups(ticket.id);
             if (followups && followups.length > 0) {
-                const ultimoFollowup = followups[followups.length - 1];
+                const ultimoFollowup = followups[0]; // ordenado DESC
                 const key = `ticket_${ticket.id}_last_followup`;
-                const lastNotified = localStorage.getItem(key) || 0;
+                const lastNotified = chamadosNotificados[key] || localStorage.getItem(key) || 0;
+                const ultimoTime = new Date(ultimoFollowup.date).getTime();
 
-                if (new Date(ultimoFollowup.date).getTime() > lastNotified) {
+                if (ultimoTime > lastNotified) {
                     mostrarNotificacao(ticket, ultimoFollowup);
-                    localStorage.setItem(key, new Date(ultimoFollowup.date).getTime());
+                    chamadosNotificados[key] = ultimoTime;
+                    localStorage.setItem(key, ultimoTime);
                 }
             }
         }
-    } catch (err) {
-        console.error(err);
     }
-}
 
-function mostrarNotificacao(ticket, followup) {
-    const container = document.createElement('div');
-    container.className = 'custom-alert';
-    container.innerHTML = `
-        <strong>Ticket #${ticket.id}</strong><br>
-        Nova resposta: ${followup.content || "Sem texto"}
-    `;
-    document.body.appendChild(container);
-    setTimeout(() => container.remove(), 8000);
-}
 
     // Fluxo principal
    iniciarSessao().then(() => {
-    buscarChamados();              // só roda depois que sessionToken existir
-    setInterval(buscarChamados, 60000);
+    verificarNovosFollowups();              // só roda depois que sessionToken existir
+    setInterval(verificarNovosFollowups, 60000);
 });
 
 })();
+
 
 
 
