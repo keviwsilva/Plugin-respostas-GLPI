@@ -6,26 +6,35 @@
     let ticketsNotificados = {};
 
     // Função para pegar o ID do usuário direto do cookie
-  
   function pegarUserIdDoCookie() {
-        const cookieName = 'glpi_70a0f13dd8971b6c5952053cb97fe86b_rememberme';
-        const cookies = document.cookie.split(';');
-        for (let c of cookies) {
-            c = c.trim();
-            if (c.startsWith(cookieName)) {
-                const valor = c.substring(cookieName.length);
-                try {
-                    // Decodifica URL e transforma em array
-                    const arr = JSON.parse(decodeURIComponent(valor));
-                    return parseInt(arr[0], 10); // pega o primeiro elemento como user_id
-                } catch (err) {
-                    console.error("Erro ao decodificar cookie:", err);
-                    return null;
-                }
+    const cookieName = 'glpi_70a0f13dd8971b6c5952053cb97fe86b_rememberme';
+    const cookies = document.cookie.split(';');
+    
+    for (let c of cookies) {
+        c = c.trim();
+        if (c.startsWith(cookieName + '=')) {
+            const valor = c.substring(cookieName.length + 1); // Pega o valor após o "="
+            try {
+                // Remove possíveis espaços e decodifica URL
+                const valorDecodificado = decodeURIComponent(valor.trim());
+                console.log('Valor decodificado:', valorDecodificado);
+                
+                // Converte a string JSON em array
+                const arr = JSON.parse(valorDecodificado);
+                console.log('Array parseado:', arr);
+                
+                // Retorna o primeiro elemento (user_id) como número
+                return parseInt(arr[0], 10);
+            } catch (err) {
+                console.error("Erro ao processar cookie:", err);
+                console.log("Valor raw:", valor);
+                return null;
             }
         }
-        return null;
     }
+    console.log('Cookie não encontrado');
+    return null;
+}
 
     MEU_USER_ID = pegarUserIdDoCookie();
     console.log("✅ MEU_USER_ID do cookie:", MEU_USER_ID);
@@ -131,5 +140,6 @@
     });
 
 })();
+
 
 
