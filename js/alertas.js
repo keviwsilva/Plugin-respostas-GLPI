@@ -31,6 +31,8 @@
 
     // Função para buscar chamados
     async function buscarChamados() {
+        console.log('chamados', sessionToken)
+        
         if (!sessionToken) {
             console.warn("Session token não definido ainda, aguardando...");
             return;
@@ -78,4 +80,5 @@
 });
 
 })();
+
 
