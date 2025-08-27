@@ -48,22 +48,23 @@
     }
 
     // 3️⃣ Buscar followups de um ticket
-    async function buscarFollowups(ticketId) {
-        try {
-            const url = `/apirest.php/TicketFollowup?range=0-50&sort=2&order=DESC&criteria[0][field]=tickets_id&criteria[0][searchtype]=equals&criteria[0][value]=${ticketId}`;
-            const res = await fetch(url, {
-                headers: {
-                    'App-Token': APP_TOKEN,
-                    'Session-Token': sessionToken
-                }
-            });
-            const data = await res.json();
-            return data;
-        } catch (err) {
-            console.error("Erro ao buscar followups do ticket", ticketId, err);
-            return [];
-        }
+   async function buscarFollowups(ticketId) {
+    try {
+        const url = `/apirest.php/TicketFollowup?range=0-50&sort=date&order=DESC&criteria[0][field]=tickets_id&criteria[0][searchtype]=equals&criteria[0][value]=${ticketId}`;
+        const res = await fetch(url, {
+            headers: {
+                'App-Token': APP_TOKEN,
+                'Session-Token': sessionToken
+            }
+        });
+        const data = await res.json();
+        return data;
+    } catch (err) {
+        console.error("Erro ao buscar followups do ticket", ticketId, err);
+        return [];
     }
+}
+
 
     // 4️⃣ Mostrar notificação visual
     function mostrarNotificacao(ticket, followup) {
@@ -105,6 +106,7 @@
 });
 
 })();
+
 
 
 
