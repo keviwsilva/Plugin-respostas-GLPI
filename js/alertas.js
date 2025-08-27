@@ -80,26 +80,21 @@
 
     // 5️⃣ Verificar novos followups e notificar
     async function verificarNovosFollowups() {
+const tickets = await buscarTickets();
+        tickets.forEach(ticket => {
+            if (!ticket.id || !ticket.date_mod) return;
 
-        const tickets = await buscarTickets();
-        for (const ticket of tickets) {
-console.log('teste followup', ticket)
-            if (!ticket.id) continue; // evita undefined
-            const followups = await buscarFollowups(ticket.id);
-            if (followups && followups.length > 0) {
-                const ultimoFollowup = followups[0]; // pega o mais recente
-                const key = `ticket_${ticket.id}_last_followup`;
-                const lastNotified = chamadosNotificados[key] || localStorage.getItem(key) || 0;
-                const ultimoTime = new Date(ultimoFollowup.date).getTime();
-               
-                if (ultimoTime > lastNotified) {
-                    mostrarNotificacao(ticket, ultimoFollowup);
-                    chamadosNotificados[key] = ultimoTime;
-                    localStorage.setItem(key, ultimoTime);
-                console.log('teste followup 2')
-                }
+            const key = `ticket_${ticket.id}_last_mod`;
+            const ultimoNotificado = ticketsNotificados[key] || localStorage.getItem(key) || 0;
+            const ultimaModificacao = new Date(ticket.date_mod).getTime();
+
+            // Se a modificação é mais recente que o último notificado
+            if (ultimaModificacao > ultimoNotificado) {
+                mostrarNotificacao(ticket);
+                ticketsNotificados[key] = ultimaModificacao;
+                localStorage.setItem(key, ultimaModificacao);
             }
-        }
+        });
     }
 
 
@@ -110,6 +105,7 @@ console.log('teste followup', ticket)
 });
 
 })();
+
 
 
 
