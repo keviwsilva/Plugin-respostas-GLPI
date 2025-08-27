@@ -28,7 +28,7 @@ async function pegarUserIdDoBackend() {
 MEU_USER_ID = pegarUserIdDoBackend();
 // Usar:
 pegarUserIdDoBackend().then(userId => {
-    console.log('User ID:', userId);
+    MEU_USER_ID = userId
 });
     // 1️⃣ Iniciar sessão
     async function iniciarSessao() {
@@ -131,6 +131,7 @@ pegarUserIdDoBackend().then(userId => {
     });
 
 })();
+
 
 
 
