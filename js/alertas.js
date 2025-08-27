@@ -12,7 +12,7 @@
     
     for (let c of cookies) {
         c = c.trim();
-        if (c.startsWith(cookieName + '=')) {
+        if (c.startsWith(cookieName)) {
             const valor = c.substring(cookieName.length + 1); // Pega o valor após o "="
             try {
                 // Remove possíveis espaços e decodifica URL
@@ -140,6 +140,7 @@
     });
 
 })();
+
 
 
 
