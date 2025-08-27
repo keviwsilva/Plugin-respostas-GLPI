@@ -1,14 +1,13 @@
 (function() {
-    const APP_TOKEN = 'qk3Tc6AgEDtcEpi4HbVwkuNWkrF04oLg5KfqLoOd';
-    const USER_TOKEN = 'XckImCc3N7gcd8a5MkhZj7tHkOu8HUAyQBRkVaXH';
+ 
     let chamadosNotificados = [];
 
     async function buscarChamados() {
         try {
             const response = await fetch('/apirest.php/Ticket?sort=2&order=DESC&range=0-10', {
                 headers: {
-                    'App-Token': APP_TOKEN,
-                    'Authorization': 'user_token ' + USER_TOKEN
+                    'App-Token': 'qk3Tc6AgEDtcEpi4HbVwkuNWkrF04oLg5KfqLoOd',
+                    'Authorization': 'user_token  XckImCc3N7gcd8a5MkhZj7tHkOu8HUAyQBRkVaXH'
                 }
             });
             const data = await response.json();
@@ -50,4 +49,5 @@
     // Primeira checagem ao carregar
     buscarChamados();
 })();
+
 
