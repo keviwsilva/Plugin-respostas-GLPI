@@ -80,10 +80,10 @@
 
     // 5️⃣ Verificar novos followups e notificar
     async function verificarNovosFollowups() {
-console.log('teste followup')
+
         const tickets = await buscarTickets();
         for (const ticket of tickets) {
-console.log('teste followup 1')
+console.log('teste followup', ticket)
             if (!ticket.id) continue; // evita undefined
             const followups = await buscarFollowups(ticket.id);
             if (followups && followups.length > 0) {
@@ -91,11 +91,12 @@ console.log('teste followup 1')
                 const key = `ticket_${ticket.id}_last_followup`;
                 const lastNotified = chamadosNotificados[key] || localStorage.getItem(key) || 0;
                 const ultimoTime = new Date(ultimoFollowup.date).getTime();
-                 console.log('teste followup 2')
+               
                 if (ultimoTime > lastNotified) {
                     mostrarNotificacao(ticket, ultimoFollowup);
                     chamadosNotificados[key] = ultimoTime;
                     localStorage.setItem(key, ultimoTime);
+                console.log('teste followup 2')
                 }
             }
         }
@@ -109,6 +110,7 @@ console.log('teste followup 1')
 });
 
 })();
+
 
 
 
