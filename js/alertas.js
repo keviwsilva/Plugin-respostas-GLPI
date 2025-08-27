@@ -44,34 +44,45 @@
                     'Session-Token': sessionToken
                 }
             });
-            const data = await res.json();
-            if (data && data.length > 0) {
-                data.forEach(ticket => {
-                    const ultimaAtualizacao = new Date(ticket.date_mod).getTime();
-                    const ultimoCheck = localStorage.getItem('last_check') || 0;
-                    if (ultimaAtualizacao > ultimoCheck && !chamadosNotificados.includes(ticket.id)) {
-                        mostrarNotificacao(ticket);
-                        chamadosNotificados.push(ticket.id);
-                    }
-                });
-                localStorage.setItem('last_check', Date.now());
-            }
-        } catch (err) {
-            console.error("Erro ao buscar tickets:", err);
-        }
-    }
 
-    // Função para mostrar notificações
-    function mostrarNotificacao(ticket) {
-        const container = document.createElement('div');
-        container.className = 'custom-alert';
-        container.innerHTML = `
-            <strong>Chamado #${ticket.id}</strong><br>
-            ${ticket.name || "Atualização recebida"}
-        `;
-        document.body.appendChild(container);
-        setTimeout(() => container.remove(), 8000);
+           const tickets = await res.json();
+
+        for (const ticket of tickets) {
+            // busca followups do ticket
+            const res2 = await fetch(`/apirest.php/Ticket/${ticket.id}/TicketFollowups`, {
+                headers: {
+                    'App-Token': APP_TOKEN,
+                    'Session-Token': sessionToken
+                }
+            });
+            const followups = await res2.json();
+
+            if (followups && followups.length > 0) {
+                const ultimoFollowup = followups[followups.length - 1];
+                const key = `ticket_${ticket.id}_last_followup`;
+                const lastNotified = localStorage.getItem(key) || 0;
+
+                if (new Date(ultimoFollowup.date).getTime() > lastNotified) {
+                    mostrarNotificacao(ticket, ultimoFollowup);
+                    localStorage.setItem(key, new Date(ultimoFollowup.date).getTime());
+                }
+            }
+        }
+    } catch (err) {
+        console.error(err);
     }
+}
+
+function mostrarNotificacao(ticket, followup) {
+    const container = document.createElement('div');
+    container.className = 'custom-alert';
+    container.innerHTML = `
+        <strong>Ticket #${ticket.id}</strong><br>
+        Nova resposta: ${followup.content || "Sem texto"}
+    `;
+    document.body.appendChild(container);
+    setTimeout(() => container.remove(), 8000);
+}
 
     // Fluxo principal
    iniciarSessao().then(() => {
@@ -80,5 +91,6 @@
 });
 
 })();
+
 
 
