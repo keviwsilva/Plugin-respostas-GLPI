@@ -160,10 +160,15 @@ getTodosTecnicosTicket(8236).then(tecnicos => {
     // 5️⃣ Fluxo principal
     iniciarSessao().then(() => {
         verificarTickets(); // primeira execução
+         MEU_USER_ID = userId;
+        
+            const tecnicos = await getTodosTecnicosTicket(sessionToken);
+            tecnicos.forEach(t => console.log(t));
         setInterval(verificarTickets, 60000); // roda a cada minuto
     });
 
 })();
+
 
 
 
