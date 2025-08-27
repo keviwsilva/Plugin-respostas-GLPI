@@ -158,7 +158,7 @@ getTodosTecnicosTicket(8236).then(tecnicos => {
     }
 
     // 5️⃣ Fluxo principal
-    iniciarSessao().then(() => {
+    iniciarSessao().then(async() => {
         verificarTickets(); // primeira execução
          MEU_USER_ID = userId;
         
@@ -168,6 +168,7 @@ getTodosTecnicosTicket(8236).then(tecnicos => {
     });
 
 })();
+
 
 
 
