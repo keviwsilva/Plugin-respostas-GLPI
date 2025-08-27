@@ -6,35 +6,6 @@
     let ticketsNotificados = {};
 
 
-async function getTodosTecnicosTicket(ticketId) {
-    try {
-        const response = await fetch(`/apirest.php/Ticket/${ticketId}/Ticket_User/`, {
-            headers: {
-                'Session-Token': USER_TOKEN,
-                'App-Token': APP_TOKEN,
-            }
-        });
-        
-        const data = await response.json();
-        
-        // Filtrar apenas técnicos (type 1 e 4)
-        const tecnicos = data.filter(item => item.type === 1 || item.type === 4);
-        
-        console.log('Todos os técnicos do ticket:', tecnicos);
-        return tecnicos;
-        
-    } catch (error) {
-        console.error('Erro ao buscar técnicos:', error);
-        return [];
-    }
-}
-
-// Usar
-getTodosTecnicosTicket(8236).then(tecnicos => {
-    tecnicos.forEach(tech => {
-        console.log(`Técnico ID: ${tech.users_id}, Tipo: ${tech.type}`);
-    });
-});
     // Função para pegar o ID do usuário direto do cookie
 async function pegarUserIdDoBackend() {
     try {
@@ -85,6 +56,35 @@ pegarUserIdDoBackend().then(userId => {
         }
     }
 
+async function getTodosTecnicosTicket(ticketId) {
+    try {
+        const response = await fetch(`/apirest.php/Ticket/${ticketId}/Ticket_User/`, {
+            headers: {
+                'Session-Token': sessioToken,
+                'App-Token': APP_TOKEN,
+            }
+        });
+        
+        const data = await response.json();
+        
+        // Filtrar apenas técnicos (type 1 e 4)
+        const tecnicos = data.filter(item => item.type === 1 || item.type === 4);
+        
+        console.log('Todos os técnicos do ticket:', tecnicos);
+        return tecnicos;
+        
+    } catch (error) {
+        console.error('Erro ao buscar técnicos:', error);
+        return [];
+    }
+}
+
+// Usar
+getTodosTecnicosTicket(8236).then(tecnicos => {
+    tecnicos.forEach(tech => {
+        console.log(`Técnico ID: ${tech.users_id}, Tipo: ${tech.type}`);
+    });
+});
     // 2️⃣ Buscar tickets
     async function buscarTickets() {
         if (!sessionToken) return [];
@@ -162,6 +162,7 @@ pegarUserIdDoBackend().then(userId => {
     });
 
 })();
+
 
 
 
