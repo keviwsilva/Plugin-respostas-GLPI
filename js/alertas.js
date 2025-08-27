@@ -8,7 +8,7 @@
     // Função para pegar o ID do usuário direto do cookie
   
   function pegarUserIdDoCookie() {
-        const cookieName = 'glpi_70a0f13dd8971b6c5952053cb97fe86b_rememberme=';
+        const cookieName = 'glpi_70a0f13dd8971b6c5952053cb97fe86b_rememberme';
         const cookies = document.cookie.split(';');
         for (let c of cookies) {
             c = c.trim();
@@ -131,4 +131,5 @@
     });
 
 })();
+
 
