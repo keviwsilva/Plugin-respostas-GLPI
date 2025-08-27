@@ -31,30 +31,6 @@ MEU_USER_ID = pegarUserIdDoBackend();
 pegarUserIdDoBackend().then(userId => {
     MEU_USER_ID = userId
 });
-    // 1️⃣ Iniciar sessão
-    async function iniciarSessao() {
-        console.log("Iniciando sessão...");
-        try {
-            const res = await fetch('/apirest.php/initSession', {
-                method: 'POST',
-                headers: {
-                    'App-Token': APP_TOKEN,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ user_token: USER_TOKEN })
-            });
-
-            const data = await res.json();
-            if (data.session_token) {
-                sessionToken = data.session_token;
-                console.log("Sessão iniciada:", sessionToken);
-            } else {
-                console.error("Falha ao iniciar sessão:", data);
-            }
-        } catch (err) {
-            console.error("Erro ao iniciar sessão:", err);
-        }
-    }
 
 async function getTodosTecnicosTicket(ticketId) {
     try {
@@ -85,6 +61,32 @@ getTodosTecnicosTicket(8236).then(tecnicos => {
         console.log(`Técnico ID: ${tech.users_id}, Tipo: ${tech.type}`);
     });
 });
+    // 1️⃣ Iniciar sessão
+    async function iniciarSessao() {
+        console.log("Iniciando sessão...");
+        try {
+            const res = await fetch('/apirest.php/initSession', {
+                method: 'POST',
+                headers: {
+                    'App-Token': APP_TOKEN,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user_token: USER_TOKEN })
+            });
+
+            const data = await res.json();
+            if (data.session_token) {
+                sessionToken = data.session_token;
+                console.log("Sessão iniciada:", sessionToken);
+            } else {
+                console.error("Falha ao iniciar sessão:", data);
+            }
+        } catch (err) {
+            console.error("Erro ao iniciar sessão:", err);
+        }
+    }
+
+
     // 2️⃣ Buscar tickets
     async function buscarTickets() {
         if (!sessionToken) return [];
@@ -162,6 +164,7 @@ getTodosTecnicosTicket(8236).then(tecnicos => {
     });
 
 })();
+
 
 
 
