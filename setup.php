@@ -1,36 +1,32 @@
 <?php
-
-function plugin_init_ticketfollowups() {
+function plugin_init_customjs() {
     global $PLUGIN_HOOKS;
 
-    $PLUGIN_HOOKS['csrf_compliant']['ticketfollowups'] = true;
+    $PLUGIN_HOOKS['csrf_compliant']['customjs'] = true;
 
-    // Hook para alterar a exibição do Ticket
-     $PLUGIN_HOOKS['item_get_title']['replycounter'] = [
-        'Ticket' => 'PluginTicketfollowupsTicket::showTicketWithFollowups'
-    ];
+    // Adiciona JS e CSS em todas as páginas
+    $PLUGIN_HOOKS['add_javascript']['customjs'] = ['js/alertas.js'];
+    $PLUGIN_HOOKS['add_css']['customjs']        = ['css/style.css'];
 }
 
-function plugin_version_ticketfollowups() {
+function plugin_version_customjs() {
     return [
-        'name'           => 'Ticket Followups Counter',
+        'name'           => "Custom JS",
         'version'        => '1.0.0',
         'author'         => 'Kevin Willians',
         'license'        => 'GPLv2+',
-        'homepage'       => 'https://github.com/keviwsilva/replycounter',
         'minGlpiVersion' => '10.0.0'
     ];
 }
 
-function plugin_ticketfollowups_check_prerequisites() {
+function plugin_customjs_check_prerequisites() {
     if (version_compare(GLPI_VERSION, '10.0.0', 'lt')) {
-        echo "Este plugin requer GLPI >= 10.0.0";
+        echo "Este plugin requer GLPI 10 ou superior";
         return false;
     }
     return true;
 }
 
-function plugin_ticketfollowups_check_config() {
+function plugin_customjs_check_config($verbose = false) {
     return true;
 }
-
