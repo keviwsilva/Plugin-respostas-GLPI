@@ -72,10 +72,10 @@
     }
 
     // Fluxo principal
-    (async function() {
-        iniciarSessao();        // abre sessão primeiro
-        buscarChamados();             // primeira checagem
-        setInterval(buscarChamados, 60000); // checagens seguintes a cada 60s
-    })();
+   iniciarSessao().then(() => {
+    buscarChamados();              // só roda depois que sessionToken existir
+    setInterval(buscarChamados, 60000);
+});
 
 })();
+
