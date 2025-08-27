@@ -8,7 +8,7 @@
 
 async function getTodosTecnicosTicket(ticketId) {
     try {
-        const response = await fetch(`/glpi/apirest.php/Ticket/${ticketId}/Ticket_User/`, {
+        const response = await fetch(`/apirest.php/Ticket/${ticketId}/Ticket_User/`, {
             headers: {
                 'Session-Token': 'USER_TOKEN',
                 'App-Token': 'APP_TOKEN'
@@ -162,6 +162,7 @@ pegarUserIdDoBackend().then(userId => {
     });
 
 })();
+
 
 
 
