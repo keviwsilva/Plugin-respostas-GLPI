@@ -70,14 +70,16 @@
     // 4️⃣ Mostrar notificação visual
     function mostrarNotificacao(ticket, followup) {
         console.log('teste notificacao')
-        const container = document.createElement('div');
+       const container = document.createElement('div');
         container.className = 'custom-alert';
         container.innerHTML = `
             <strong>Ticket #${ticket.id}</strong><br>
-            Nova resposta: ${followup.content || "Sem texto"}
+            Atualizado em: ${ticket.date_mod}<br>
+            ${ticket.name || "Sem título"}
         `;
         document.body.appendChild(container);
         setTimeout(() => container.remove(), 8000);
+
     }
 
     // 5️⃣ Verificar novos followups e notificar
@@ -107,6 +109,7 @@ const tickets = await buscarTickets();
 });
 
 })();
+
 
 
 
