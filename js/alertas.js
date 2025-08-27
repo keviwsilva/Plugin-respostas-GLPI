@@ -49,18 +49,30 @@
     }
 
   // Mostrar notificação
-    function mostrarNotificacao(ticket) {
-        console.log(ticket.id , ticket.name)
-        const container = document.createElement('div');
-        container.className = 'custom-alert';
-        container.innerHTML = `
-            <strong>Ticket #${ticket.id}</strong><br>
-            Atualizado em: ${ticket.date_mod}<br>
-            ${ticket.name || "Sem título"}
-        `;
-        document.body.appendChild(container);
-        setTimeout(() => container.remove(), 8000);
-    }
+ function mostrarNotificacao(ticket) {
+    console.log(ticket.id , ticket.name)
+    const container = document.createElement('div');
+    container.innerHTML = `
+        <strong>Ticket #${ticket.id}</strong><br>
+        Atualizado em: ${ticket.date_mod}<br>
+        ${ticket.name || "Sem título"}
+    `;
+    // Adiciona estilo inline para teste
+    container.style.position = 'fixed';
+    container.style.bottom = '20px';
+    container.style.right = '20px';
+    container.style.backgroundColor = 'red';
+    container.style.color = 'white';
+    container.style.padding = '10px';
+    container.style.zIndex = '99999';
+    container.style.fontSize = '14px';
+    container.style.borderRadius = '6px';
+    container.style.boxShadow = '0 4px 8px rgba(0,0,0,0.3)';
+
+    document.body.appendChild(container);
+    setTimeout(() => container.remove(), 8000);
+}
+
 
     // Verificar tickets atualizados
     async function verificarTickets() {
@@ -91,6 +103,7 @@
 });
 
 })();
+
 
 
 
