@@ -50,6 +50,7 @@
 
   // Mostrar notificação
     function mostrarNotificacao(ticket) {
+        console.log(ticket.id , ticket.name)
         const container = document.createElement('div');
         container.className = 'custom-alert';
         container.innerHTML = `
@@ -70,7 +71,8 @@
             const key = `ticket_${ticket.id}_last_mod`;
             const ultimoNotificado = ticketsNotificados[key] || localStorage.getItem(key) || 0;
             const ultimaModificacao = new Date(ticket.date_mod).getTime();
-
+        console.log(ultimoNotificado)
+            console.log(ultimaModificacao)
             // Se a modificação é mais recente que o último notificado
             if (ultimaModificacao > ultimoNotificado) {
                 mostrarNotificacao(ticket);
@@ -89,6 +91,7 @@
 });
 
 })();
+
 
 
 
