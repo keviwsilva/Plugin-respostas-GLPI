@@ -8,7 +8,7 @@
     // Função para pegar o ID do usuário direto do cookie
 async function pegarUserIdDoBackend() {
     try {
-        const response = await fetch('get_user_id.php', {
+        const response = await fetch('../plugins/customjs/get_user_id.php', {
             credentials: 'include' // importante para enviar cookies
         });
         
@@ -130,6 +130,7 @@ pegarUserIdDoBackend().then(userId => {
     });
 
 })();
+
 
 
 
