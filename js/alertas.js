@@ -141,7 +141,7 @@ async function getTodosTecnicosTicket(ticketId) {
         console.log(tickets)
         tickets.forEach(ticket => {
             if (!ticket.id || !ticket.date_mod) return;
-             const tecnicos = await getTodosTecnicosTicket(ticket);
+             const tecnicos = getTodosTecnicosTicket(ticket);
             tecnicos.forEach(t => console.log(t));
             // Mostra só para tickets atribuídos ao usuário do cookie
             if (ticket.users_id_assign !== MEU_USER_ID) return;
@@ -167,6 +167,7 @@ async function getTodosTecnicosTicket(ticketId) {
     });
 
 })();
+
 
 
 
