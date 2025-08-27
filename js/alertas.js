@@ -87,7 +87,9 @@
     // Verificar tickets atualizados
    async function verificarTickets() {
         if (!MEU_USER_ID) return;
+        console.log(MEU_USER_ID)
         const tickets = await buscarTickets();
+        console.log(tickets)
         tickets.forEach(ticket => {
             if (!ticket.id || !ticket.date_mod) return;
 
@@ -114,6 +116,7 @@
 });
 
 })();
+
 
 
 
