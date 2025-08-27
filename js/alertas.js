@@ -56,11 +56,11 @@ async function getTodosTecnicosTicket(ticketId) {
 }
 
 // Usar
-getTodosTecnicosTicket(8236).then(tecnicos => {
-    tecnicos.forEach(tech => {
-        console.log(`Técnico ID: ${tech.users_id}, Tipo: ${tech.type}`);
-    });
-});
+// getTodosTecnicosTicket(8236).then(tecnicos => {
+//     tecnicos.forEach(tech => {
+//         console.log(`Técnico ID: ${tech.users_id}, Tipo: ${tech.type}`);
+//     });
+// });
     // 1️⃣ Iniciar sessão
     async function iniciarSessao() {
         console.log("Iniciando sessão...");
@@ -168,6 +168,7 @@ getTodosTecnicosTicket(8236).then(tecnicos => {
     });
 
 })();
+
 
 
 
