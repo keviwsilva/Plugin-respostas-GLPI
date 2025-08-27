@@ -6,38 +6,29 @@
     let ticketsNotificados = {};
 
     // Função para pegar o ID do usuário direto do cookie
-function pegarUserIdDoCookie() {
-    // Verifica todos os cookies que começam com 'glpi_'
-    const cookies = document.cookie.split(';');
-    
-    for (let c of cookies) {
-        c = c.trim();
-        if (c.includes('glpi_') && c.includes('_rememberme')) {
-            const parts = c.split('=');
-            const cookieValue = parts[1];
-            
-            try {
-                const valorDecodificado = decodeURIComponent(cookieValue);
-                console.log('Cookie GLPI encontrado:', c);
-                console.log('Valor decodificado:', valorDecodificado);
-                
-                const arr = JSON.parse(valorDecodificado);
-                return parseInt(arr[0], 10);
-            } catch (err) {
-                console.error("Erro ao processar cookie:", err);
-                return null;
-            }
+async function pegarUserIdDoBackend() {
+    try {
+        const response = await fetch('get_user_id.php', {
+            credentials: 'include' // importante para enviar cookies
+        });
+        
+        if (!response.ok) {
+            throw new Error('Erro na requisição');
         }
+        
+        const data = await response.json();
+        return data.user_id;
+        
+    } catch (error) {
+        console.error('Erro ao buscar user_id:', error);
+        return null;
     }
-    
-    console.log('Nenhum cookie GLPI rememberme encontrado');
-    console.log('Todos os cookies:', document.cookie);
-    return null;
 }
 
-    MEU_USER_ID = pegarUserIdDoCookie();
-    console.log("✅ MEU_USER_ID do cookie:", MEU_USER_ID);
-
+// Usar:
+pegarUserIdDoBackend().then(userId => {
+    console.log('User ID:', userId);
+});
     // 1️⃣ Iniciar sessão
     async function iniciarSessao() {
         console.log("Iniciando sessão...");
@@ -139,6 +130,7 @@ function pegarUserIdDoCookie() {
     });
 
 })();
+
 
 
 
