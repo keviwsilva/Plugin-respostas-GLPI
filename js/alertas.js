@@ -5,6 +5,8 @@
     let sessionToken = null;
     let chamadosNotificados = [];
 
+    // Últimos tickets notificados
+    let ticketsNotificados = {};
     // 1️⃣ Iniciar sessão
     async function iniciarSessao() {
         console.log("Iniciando sessão...");
@@ -105,6 +107,7 @@ const tickets = await buscarTickets();
 });
 
 })();
+
 
 
 
