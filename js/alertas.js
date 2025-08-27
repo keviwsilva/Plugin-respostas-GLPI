@@ -29,42 +29,41 @@
         }
     }
 
-    // 2️⃣ Buscar tickets
-    async function buscarTickets() {
-        if (!sessionToken) return;
+  async function buscarTickets() {
+        if (!sessionToken) return [];
         try {
-            const res = await fetch('/apirest.php/Ticket?range=0-10&sort=2&order=DESC', {
+            const res = await fetch('/apirest.php/Ticket?range=0-10', {
                 headers: {
                     'App-Token': APP_TOKEN,
                     'Session-Token': sessionToken
                 }
             });
             const tickets = await res.json();
-            return tickets;
+            return tickets || [];
         } catch (err) {
             console.error("Erro ao buscar tickets:", err);
             return [];
         }
     }
 
-    // 3️⃣ Buscar followups de um ticket
-   async function buscarFollowups(ticketId) {
-    try {
-        const url = `/apirest.php/TicketFollowup?range=0-50&sort=date&order=DESC&criteria[0][field]=tickets_id&criteria[0][searchtype]=equals&criteria[0][value]=${ticketId}`;
-        const res = await fetch(url, {
-            headers: {
-                'App-Token': APP_TOKEN,
-                'Session-Token': sessionToken
-            }
-        });
-        const data = await res.json();
-        return data;
-    } catch (err) {
-        console.error("Erro ao buscar followups do ticket", ticketId, err);
-        return [];
+    // 3️⃣ Buscar followups de um ticket (sem sort)
+    async function buscarFollowups(ticketId) {
+        if (!sessionToken || !ticketId) return [];
+        try {
+            const url = `/apirest.php/TicketFollowup?range=0-50&criteria[0][field]=tickets_id&criteria[0][searchtype]=equals&criteria[0][value]=${ticketId}`;
+            const res = await fetch(url, {
+                headers: {
+                    'App-Token': APP_TOKEN,
+                    'Session-Token': sessionToken
+                }
+            });
+            const data = await res.json();
+            return data || [];
+        } catch (err) {
+            console.error("Erro ao buscar followups do ticket", ticketId, err);
+            return [];
+        }
     }
-}
-
 
     // 4️⃣ Mostrar notificação visual
     function mostrarNotificacao(ticket, followup) {
@@ -82,9 +81,10 @@
     async function verificarNovosFollowups() {
         const tickets = await buscarTickets();
         for (const ticket of tickets) {
+            if (!ticket.id) continue; // evita undefined
             const followups = await buscarFollowups(ticket.id);
             if (followups && followups.length > 0) {
-                const ultimoFollowup = followups[0]; // ordenado DESC
+                const ultimoFollowup = followups[0]; // pega o mais recente
                 const key = `ticket_${ticket.id}_last_followup`;
                 const lastNotified = chamadosNotificados[key] || localStorage.getItem(key) || 0;
                 const ultimoTime = new Date(ultimoFollowup.date).getTime();
@@ -106,6 +106,7 @@
 });
 
 })();
+
 
 
 
