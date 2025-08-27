@@ -36,15 +36,15 @@
     // 2️⃣ Pegar ID do usuário autenticado
     async function buscarMeuUserId() {
         try {
-            const res = await fetch('/apirest.php/getMyProfiles', {
+            const res = await fetch('/apirest.php/getMyUser', { // endpoint correto para usuário logado
                 headers: {
                     'App-Token': APP_TOKEN,
                     'Session-Token': sessionToken
                 }
             });
             const data = await res.json();
-            if (data && data[0] && data[0].users_id) {
-                MEU_USER_ID = data[0].users_id;
+            if (data && data.id) {
+                MEU_USER_ID = data.id;
                 console.log("✅ Meu user_id é:", MEU_USER_ID);
             } else {
                 console.warn("⚠ Não foi possível identificar o usuário logado:", data);
@@ -130,3 +130,4 @@
     });
 
 })();
+
