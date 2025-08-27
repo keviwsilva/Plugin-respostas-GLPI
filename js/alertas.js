@@ -160,7 +160,6 @@ async function getTodosTecnicosTicket(ticketId) {
     // 5️⃣ Fluxo principal
     iniciarSessao().then(async() => {
         verificarTickets(); // primeira execução
-         MEU_USER_ID = userId;
         
             const tecnicos = await getTodosTecnicosTicket(sessionToken);
             tecnicos.forEach(t => console.log(t));
@@ -168,6 +167,7 @@ async function getTodosTecnicosTicket(ticketId) {
     });
 
 })();
+
 
 
 
