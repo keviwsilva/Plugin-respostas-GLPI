@@ -75,7 +75,7 @@ async function getTodosTecnicosTicket(ticketId) {
             const data = await res.json();
             if (data.session_token) {
                 sessionToken = data.session_token;
-                console.log("Sessão iniciada:", sessionToken);
+                console.log("Sessão iniciada:");
             } else {
                 console.error("Falha ao iniciar sessão:", data);
             }
@@ -206,6 +206,7 @@ function mostrarNotificacao(ticket) {
     });
 
 })();
+
 
 
 
