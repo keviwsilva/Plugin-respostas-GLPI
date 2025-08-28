@@ -44,7 +44,7 @@ async function getTodosTecnicosTicket(ticketId) {
         const data = await response.json();
         // Filtrar apenas técnicos (type 1 e 4)
         const tecnicos = data.filter(item => item.type === 2 || item.type === 4);
-        console.log(tecnicos)
+        
         return tecnicos;
         
     } catch (error) {
@@ -119,7 +119,6 @@ if (!notificacoesContainer) {
 }
 
 function mostrarNotificacao(ticket) {
-    console.log("🔔 Notificação:", ticket.id, ticket.name);
 
     const container = document.createElement('div');
     container.innerHTML = `
@@ -207,6 +206,7 @@ function mostrarNotificacao(ticket) {
     });
 
 })();
+
 
 
 
